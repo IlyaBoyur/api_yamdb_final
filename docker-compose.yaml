@@ -14,7 +14,7 @@ services:
       - ./.env
 
   web:
-    image: ilyaboyur/yamdb_final:latest
+    image: ${DOCKER_USERNAME}/yamdb_final:latest
     restart: always
     ports:
       - "8000:8000"
