@@ -1,29 +1,27 @@
+from api_yamdb.settings import EMAIL_NAME
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
+
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, mixins, status
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import (
-    AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
-)
+from rest_framework.permissions import (AllowAny, IsAuthenticated,
+                                        IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from api_yamdb import settings
 from .filters import TitleFilter
 from .models import Category, Genre, Review, Title, User
-from .permissions import (
-    IsAdmin, IsAdminOrReadOnly, IsAuthorOrModeratorOrReadOnly
-)
-from .serializers import (
-    CategorySerializer, CommentSerializer, GenreSerializer, ReviewSerializer,
-    TitleReadSerializer, TitleWriteSerializer, TokenAuthSerializer,
-    UserSerializer,
-)
+from .permissions import (IsAdmin, IsAdminOrReadOnly,
+                          IsAuthorOrModeratorOrReadOnly)
+from .serializers import (CategorySerializer, CommentSerializer,
+                          GenreSerializer, ReviewSerializer,
+                          TitleReadSerializer, TitleWriteSerializer,
+                          TokenAuthSerializer, UserSerializer)
 
 
 class NameSlugCreateListDestroyViewSet(mixins.CreateModelMixin,
@@ -53,7 +51,7 @@ def auth_email(request):
     send_mail(
         subject='Подтверждение регистрации',
         message=f'Код для подтверждения: {token}',
-        from_email=settings.EMAIL_NAME,
+        from_email=EMAIL_NAME,
         recipient_list=(email,)
     )
     return Response({'message': f'Код отправлен на {email}'},
@@ -98,6 +96,7 @@ class UsersViewSet(ModelViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save(role=request.user.role, partial=True)
             return Response(serializer.data)
+        return None
 
 
 class CategoryViewSet(NameSlugCreateListDestroyViewSet):

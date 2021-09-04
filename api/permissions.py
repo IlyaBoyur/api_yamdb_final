@@ -1,6 +1,6 @@
-from rest_framework.permissions import BasePermission, SAFE_METHODS
+from rest_framework.permissions import SAFE_METHODS, BasePermission
 
-from .models import ROLE_MODERATOR, ROLE_ADMIN
+from .models import ROLE_ADMIN, ROLE_MODERATOR
 
 
 class IsAdmin(BasePermission):

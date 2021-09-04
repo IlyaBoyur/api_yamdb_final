@@ -4,7 +4,6 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
-
 ROLE_USER = 'user'
 ROLE_MODERATOR = 'moderator'
 ROLE_ADMIN = 'admin'
