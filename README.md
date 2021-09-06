@@ -52,7 +52,10 @@ docker-compose exec web python manage.py collectstatic
 - Корневое представление API по умолчанию: http://localhost/api/v1/
 - Админка: http://localhost/admin
 - Документация: http://localhost/redoc
+- Развернутый проект: [здесь](http://api-yamdb.ml/api/v1/)
 
 ### Авторы
 - [Илья Боюр](https://github.com/IlyaBoyur): тимлид, отвественен за сдачу проекта, за модели Category, Genre, Title, Review, Comment, рейтинги для Title
 - [Артем Третьяков](https://github.com/ingvior-inc): кросс-ревьюер, ответственен за авторизацию, модели пользователей
+
+
