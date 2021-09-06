@@ -16,8 +16,6 @@ services:
   web:
     image: ilyaboyur/yamdb_final:latest
     restart: always
-    ports:
-      - "8000:8000"
     volumes:
       - static_value:/code/static/
       - media_value:/code/media/
