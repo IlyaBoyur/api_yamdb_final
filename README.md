@@ -19,40 +19,70 @@
 Благодарные или возмущённые пользователи оставляют к произведениям текстовые **отзывы** (**Review**) и ставят произведению оценку в диапазоне от одного до десяти (целое число); из пользовательских оценок формируется усреднённая оценка произведения — **рейтинг** (целое число). На одно произведение пользователь может оставить только один отзыв.
 
 ## Технологии
-Django, Django REST Framework, PostgreSQL, Simple-JWT, Gunicorn, Docker, nginx, git
+Django, Django REST Framework, PostgreSQL, Simple-JWT, Gunicorn, Docker, nginx, Google Cloud, git
 
 ## Запуск проекта
-### 0. Подготовить окружение
+### 0. Клонировать репозиторий
+### 1. Подготовить окружение
 - Установить [Docker](https://docs.docker.com/get-docker/)
-- Перейти в директорию проекта с docker-compose.yaml
+- Установите [docker-compose](https://docs.docker.com/compose/install/)
+- Перейти в директорию проекта с docker-compose.yaml (по умолчанию: корень проекта)
 
-### 1. Собрать и запустить контейнеры Docker
+### 2. Создать файл переменных среды
+Создать в текущей папке файл .env со следующим содержимым:
+```bash
+SECRET_KEY=mysecretkey                  # секретный ключ Django (установите свой)
+DJANGO_DEBUG_VALUE=True                 # запускаем в режиме отладки. False чтобы отключить 
+DB_ENGINE=django.db.backends.postgresql # работаем с БД PostgreSQL
+DB_NAME=postgres                        # имя базы данных
+POSTGRES_USER=postgres                  # имя пользователя БД
+POSTGRES_PASSWORD=postgres              # пароль пользователя БД (установите свой)
+DB_HOST=db                              # название сервиса (контейнера)
+DB_PORT=5432                            # порт для подключения к БД
+```
+
+### 3. Собрать и запустить контейнеры Docker
 ```bash
 docker-compose up --build -d
 ```
 
-### 2. Создать администратора Django
+### 4. Выполнить миграцию базы данных
 ```bash
-docker-compose exec web python manage.py createsuperuser
+docker-compose exec web python manage.py migrate
 ```
-Введите почту и пароль в интерактивном режиме.
 
-### 3. Заполнить базу данных тестовыми данными
+### 5. Заполнить базу данных тестовыми данными
+Определить ID контейнера web
 ```bash
-docker-compose exec web python manage.py import_data
+docker-compose ps
 ```
-Дождитесь окончания импорта.
+Тестовые данные (расположение по умолчанию: в корне проекта) перенести в контейнер и загрузить их в базу:
+```bash
+docker cp fixtures.json <ID контейнера web>:/
+docker-compose exec web python manage.py loaddata /fixtures.json -v 3 --force-color
+```
+По окончании импорта консоль покажет примерно такое сообщение:
+```bash
+Installed 5504 object(s) from 1 fixture(s)
+```
 
-### 4. Собрать статические данные
+### 6. Собрать статические данные
 ```bash
 docker-compose exec web python manage.py collectstatic
 ```
 
-### 5. Открыть браузер
-- Корневое представление API по умолчанию: http://localhost/api/v1/
+### 7. Профит! Проверить работоспособность проекта
+- Корень проекта: http://localhost/api/v1/
 - Админка: http://localhost/admin
 - Документация: http://localhost/redoc
-- Развернутый проект: [здесь](http://api-yamdb.ml/api/v1/)
+
+<br>
+
+### Развернутый проект:
+- Деплой на Google Cloud [здесь](http://api-yamdb.ml/api/v1/)
+- Админка: http://localhost/admin, логин admin@admin.su, пароль admin
+
+<br>
 
 ### Авторы
 - [Илья Боюр](https://github.com/IlyaBoyur): тимлид, отвественен за сдачу проекта, за модели Category, Genre, Title, Review, Comment, рейтинги для Title
