@@ -6,9 +6,9 @@ from .models import Category, Comment, Genre, Review, Title, User
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
+        model = User
         fields = ('first_name', 'last_name', 'username', 'bio', 'email',
                   'role')
-        model = User
 
 
 class TokenAuthSerializer(serializers.Serializer):
